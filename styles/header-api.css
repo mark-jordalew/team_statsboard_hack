@@ -1,0 +1,25 @@
+.header-api {
+    font-family: 'Open Sans', sans-serif;
+    position: absolute;
+    width: 20%;
+    top: 100%;
+    display: none;
+}
+
+.header-api.isActive {
+    display: block;
+}
+
+.header-api__description {
+    color: #F2F2F2;
+    font-size: 11px;
+    padding: 10px;
+    background-color: #161616;
+}
+
+.header-api__input {
+    height: 40px;
+    width: 100%;
+    padding: 10px;
+    border-bottom: 1px solid #F2F2F2;
+}

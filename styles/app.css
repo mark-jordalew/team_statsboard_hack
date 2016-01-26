@@ -1,0 +1,42 @@
+.app {
+    height: 100%;
+    width: 100%;
+    position: absolute;
+    top: 0;
+    padding-top: calc(4.5vh + .2vh);
+    z-index: 0;
+    display: flex;
+}
+
+.app__sidebar {
+    height: 100%;
+    overflow: scroll;
+    background-color: #262626;
+    width: 13%;
+    margin-left: -13%;
+    transition: .2s;
+}
+
+.app__sidebar.isVisible {
+    margin-left: 0;
+}
+
+.app__pages {
+    position: relative;
+    flex: 1 87%;
+    height: 100%;
+    padding: 10px;
+}
+
+.app__iframe {
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    top: 0;
+    left: 0;
+    visibility: hidden;
+}
+
+.app__iframe.isActive {
+    visibility: visible;
+}

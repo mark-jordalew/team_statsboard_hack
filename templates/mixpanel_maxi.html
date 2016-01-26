@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <title>Mamga home</title>
+
+        <script src="https://cdn.mxpnl.com/libs/mixpanel-platform/build/mixpanel-platform.v0.latest.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/1.0.2/Chart.min.js"></script>
+
+        <link rel="stylesheet" type="text/css" href="//fonts.googleapis.com/css?family=Open+Sans" />
+        <link rel="stylesheet" href="/styles/dashboard.css">
+    </head>
+
+    <body class="page page--inverse page--centered">
+        <div class="grid">
+            <div class="row row--separated">
+                <div class="col heading">Upload (unique page views)</div>
+                <div class="col heading">Publication list (unique page views)</div>
+                <div class="col heading">Statistics (unique page views)</div>
+            </div>
+            <div class="row row--flex">
+                <div class="col">
+                    <canvas id="upload"></canvas>
+                </div>
+                <div class="col">
+                    <canvas id="publication-list"></canvas>
+                </div>
+                <div class="col">
+                    <canvas id="statistics"></canvas>
+                </div>
+            </div>
+            <div class="row row--separated">
+                <div class="col heading">Upload (unique page views YOY)</div>
+                <div class="col heading">Publication list (unique page views YOY)</div>
+                <div class="col heading">Statistics (unique page views YOY)</div>
+            </div>
+            <div class="row row--flex">
+                <div class="col">
+                    <canvas id="upload-yoy"></canvas>
+                </div>
+                <div class="col">
+                    <canvas id="publication-list-yoy"></canvas>
+                </div>
+                <div class="col">
+                    <canvas id="statistics-yoy"></canvas>
+                </div>
+            </div>
+            <div class="row row--separated">
+                <div class="col heading">Suite Overall Usage Free (unique page views YOY)</div>
+                <div class="col heading">Suite Overall Usage Paying (unique page views YOY)</div>
+                <div class="col heading">Changelog</div>
+            </div>
+            <div class="row row--flex">
+                <div class="col">
+                    <canvas id="publisher-suite-free-yoy"></canvas>
+                </div>
+                <div class="col">
+                    <canvas id="publisher-suite-paying-yoy"></canvas>
+                </div>
+                <div class="col">
+                    <div class="text">
+                        <ul>
+                            <li>2015-01-11 (W02): release</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <script>
+            Chart.defaults.global.multiTooltipTemplate = "<%= datasetLabel %> - <%= value %>";
+            Chart.defaults.global.scaleLineColor = "#262626";
+            Chart.defaults.global.animation = false;
+
+            var DATE_FROM = () => moment().subtract(10, 'week');
+            var DATE_TO = () => moment().startOf('week');
+            var opts = {
+                from: DATE_FROM(),
+                to: DATE_TO(),
+                unit: 'week',
+                type: 'unique'
+            };
+            var optsYoy = {
+                from: DATE_FROM().subtract(1, 'year'),
+                to: DATE_TO().subtract(1, 'year'),
+                unit: 'week',
+                type: 'unique'
+            };
+            var COLOR_GREEN = '0,153,76';
+            var COLOR_GREY = '180,180,180';
+            var COLOR_ORANGE = '205,102,0';
+            var COLORS = [COLOR_GREEN, COLOR_GREY];
+
+            var CUSTOM_EVENT_ALL = '$custom_event:61671';
+            var CUSTOM_EVENT_FREE = '$custom_event:61699';
+            var CUSTOM_EVENT_PAYING = '$custom_event:61691';
+
+            function appendChart(id, tooltipLabels, array) {
+                var labels = Object.keys(array[0]).sort();
+                var datasets = array.map(function(obj, index) {
+                    return {
+                        label: tooltipLabels[index],
+                        fillColor: 'rgba(' + COLORS[index] + ', 0.2)',
+                        strokeColor: 'rgba(' + COLORS[index] + ', 1)',
+                        pointColor: 'rgba(' + COLORS[index] + ', 1)',
+                        pointStrokeColor: '#161616',
+                        pointHighlightFill: '#161616',
+                        pointHighlightStroke: 'rgba(' + COLORS[index] + ', 1)',
+                        data: labels.map(label => obj[label])
+                    };
+                });
+
+                labels = labels.map(l => moment(l).format('YYYY WW'));
+
+                var ctx = document.getElementById(id).getContext("2d");
+                new Chart(ctx).Line({
+                    labels: labels,
+                    datasets: datasets
+                });
+            }
+
+            function appendYoyChart(id, dataCurrent, dataHistory) {
+                var labels = [];
+                Object.keys(dataCurrent).forEach(d => {
+                    // The data we started tracking:
+                    if (moment(d) > moment('2015-12-09')) {
+                        labels.push(d);
+                    }
+                })
+                labels = labels.sort();
+
+                const color = '222,184,58';
+                var datasets = [{
+                    label: '%',
+                    fillColor: 'rgba(' + color + ', 0.2)',
+                    strokeColor: 'rgba(' + color + ', 1)',
+                    pointColor: 'rgba(' + color + ', 1)',
+                    pointStrokeColor: '#161616',
+                    pointHighlightFill: '#161616',
+                    pointHighlightStroke: 'rgba(' + color + ', 1)',
+                    data: labels.map(labelDate => {
+                        var newValue = dataCurrent[labelDate];
+                        if (typeof newValue === 'undefined') {
+                            throw new Error('newValue was undefined');
+                        }
+
+                        // Guess the same date last year:
+                        var lastYearDate = moment(labelDate).subtract(1, 'year');
+                        if (lastYearDate.weekday() === 0) {
+                            lastYearDate = lastYearDate.weekday(1);
+                        }
+                        if (lastYearDate.weekday() !== 1) {
+                            throw new Error('wrong weekday for', labelDate, lastYearDate, lastYearDate.weekday());
+                        }
+                        lastYearDate = lastYearDate.format('YYYY-MM-DD');
+
+                        var oldValue = dataHistory[lastYearDate];
+                        if (typeof oldValue === 'undefined') {
+                            throw new Error('Did not find data for', labelDate, 'trying', lastYearDate, dataHistory);
+                        }
+
+                        return (((newValue - oldValue) / oldValue) * 100).toFixed(1);
+                    })
+                }];
+
+                labels = labels.map(l => moment(l).format('YYYY WW'));
+                var ctx = document.getElementById(id).getContext("2d");
+                new Chart(ctx).Line({
+                    labels: labels,
+                    datasets: datasets
+                });
+            }
+
+            $.when(
+                MP.api.segment(CUSTOM_EVENT_FREE, opts),
+                MP.api.segment(CUSTOM_EVENT_PAYING, opts),
+
+                MP.api.segment('Publish Overlay Viewed', opts),
+                MP.api.segment('Publish Overlay Viewed', Object.assign({
+                    where: 'properties["$referrer"] == "https://issuu.com/home/publisher"'
+                }, opts)),
+                MP.api.segment('Pub Tools Publications Viewed', opts),
+                MP.api.segment('Pub Tools Publications Viewed', Object.assign({
+                    where: 'properties["$referrer"] == "https://issuu.com/home/publisher"'
+                }, opts)),
+                MP.api.segment('Pub Tools Statistics Viewed', opts),
+                MP.api.segment('Pub Tools Statistics Viewed', Object.assign({
+                    where: 'properties["$referrer"] == "https://issuu.com/home/publisher"'
+                }, opts)),
+
+                // Year over year growth:
+                MP.api.segment(CUSTOM_EVENT_FREE, optsYoy),
+                MP.api.segment(CUSTOM_EVENT_PAYING, optsYoy),
+                MP.api.segment('Publish Overlay Viewed', optsYoy),
+                MP.api.segment('Pub Tools Publications Viewed', optsYoy),
+                MP.api.segment('Pub Tools Statistics Viewed', optsYoy)
+            ).done(function(
+                publisherToolFreeTotal,
+                publisherToolPayingTotal,
+
+                uploadViewedTotal,
+                uploadViewedReferrerIsPublisherHome,
+                publicationListViewedTotal,
+                publicationListViewedReferrerIsPublisherHome,
+                statisticsViewedTotal,
+                statisticsViewedReferrerIsPublisherHome,
+
+                publisherToolFreeTotalYoy,
+                publisherToolPayingTotalYoy,
+                uploadViewedTotalYoy,
+                publicationListViewedTotalYoy,
+                statisticsViewedTotalYoy
+            ) {
+                //appendChart('publisher-suite', ['Free users', 'Paying users'], [
+                //    publisherToolFreeTotal.json[CUSTOM_EVENT_FREE],
+                //    publisherToolPayingTotal.json[CUSTOM_EVENT_PAYING],
+                //]);
+
+                appendChart('upload', ['Total', 'Referrer home'], [
+                    uploadViewedTotal.json['Publish Overlay Viewed'],
+                    uploadViewedReferrerIsPublisherHome.json['Publish Overlay Viewed']
+                ]);
+                appendChart('publication-list', ['Total', 'Referrer home'], [
+                    publicationListViewedTotal.json['Pub Tools Publications Viewed'],
+                    publicationListViewedReferrerIsPublisherHome.json['Pub Tools Publications Viewed']
+                ]);
+                appendChart('statistics', ['Total', 'Referrer home'], [
+                    statisticsViewedTotal.json['Pub Tools Statistics Viewed'],
+                    statisticsViewedReferrerIsPublisherHome.json['Pub Tools Statistics Viewed'],
+                ]);
+
+                // year over year
+                appendYoyChart('publisher-suite-free-yoy',
+                    publisherToolFreeTotal.json[CUSTOM_EVENT_FREE],
+                    publisherToolFreeTotalYoy.json[CUSTOM_EVENT_FREE]
+                );
+                appendYoyChart('publisher-suite-paying-yoy',
+                    publisherToolPayingTotal.json[CUSTOM_EVENT_PAYING],
+                    publisherToolPayingTotalYoy.json[CUSTOM_EVENT_PAYING]
+                );
+                appendYoyChart('upload-yoy',
+                    uploadViewedTotal.json['Publish Overlay Viewed'],
+                    uploadViewedTotalYoy.json['Publish Overlay Viewed']
+                );
+                appendYoyChart('publication-list-yoy',
+                    publicationListViewedTotal.json['Pub Tools Publications Viewed'],
+                    publicationListViewedTotalYoy.json['Pub Tools Publications Viewed']
+                );
+                appendYoyChart('statistics-yoy',
+                    statisticsViewedTotal.json['Pub Tools Statistics Viewed'],
+                    statisticsViewedTotalYoy.json['Pub Tools Statistics Viewed']
+                );
+            });
+        </script>
+    </body>
+</html>

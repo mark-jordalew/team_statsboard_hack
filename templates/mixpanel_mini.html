@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <title>Mixpanel</title>
+        <!-- mixpanel lib include -->
+        <script src='mixpanel_ap_include.js'></script>
+        <script src="https://cdn.mxpnl.com/libs/mixpanel-platform/build/mixpanel-platform.v0.latest.min.js"></script>
+        <!-- cloudflare chart lib include -->
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/1.0.2/Chart.min.js"></script>
+        <!-- styles -->
+        <link rel="stylesheet" type="text/css" href="//fonts.googleapis.com/css?family=Open+Sans" />
+        <link rel="stylesheet" href="/styles/dashboard.css">
+    </head>
+
+    <body class="page page--inverse page--centered">
+        <div class="grid">
+          <div class="col">
+              <div id='datepicker'></div>
+          </div>
+            <div class="row row--separated">
+                <div class="col heading">Indesign Plugin (data downloads and fails)</div>
+                <div class="col heading">Issues Selected</div>
+                <div class="col heading">Successful Plugin Logins</div>
+            </div>
+            <div class="row row--flex">
+                <div class="col">
+                    <canvas id="downloads"></canvas>
+                </div>
+                <div class="col">
+                    <canvas id="issuesSelected"></canvas>
+                </div>
+                <div class="col">
+                    <canvas id="logins"></canvas>
+                </div>
+            </div>
+            <div class="col">
+                <div class="text">
+                    <ul>
+                        <li>2015-01-11 (W02): release</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <script>
+            // datepicker div - get everything else working first.
+            // $('#datepicker').MPDatepicker().on('change', function(dateRange)){
+            //  console.log(daterange.from);
+            //  console.log(daterange.to);
+            //}
+
+            Chart.defaults.global.multiTooltipTemplate = "<%= datasetLabel %> - <%= value %>";
+            Chart.defaults.global.scaleLineColor = "#262626";
+            Chart.defaults.global.animation = false;
+            // opts for chart creation for span of ten days
+            var DATE_FROM = () => moment().subtract(10, 'week');
+            var DATE_TO   = () => moment().startOf('week');
+            var opts = {
+                from: DATE_FROM(),
+                to:   DATE_TO(),
+                unit: 'week'
+            };
+            var COLOR_GREEN  = '0,153,76';
+            var COLOR_GREY   = '180,180,180';
+            var COLOR_ORANGE = '205,102,0';
+            var COLORS       = [COLOR_GREEN, COLOR_GREY];
+            // Crocodile events
+            var PLUGING_DL_AND_FAIL_COUNT = 'EXTENSION:MAGMA_EXTENSION_NITIALIZED'
+            var ISSUE_SELECTED            = 'EXTENSION:ISSUE_SELECTED'
+            var LOGIN_SUCCESS             = 'EXTENSION:LOGIN_SUCCESS'
+            //
+            function insertChart(canvas_id, tooltipLabels, mpjsonresponse) {
+                var labels   = Object.keys(mpjsonresponse[0]).sort();
+                var datasets = mpjsonresponse.map(function(obj, index) {
+                    return {
+                        label: tooltipLabels[index],
+                        fillColor:   'rgba(' + COLORS[index] + ', 0.2)',
+                        strokeColor: 'rgba(' + COLORS[index] + ', 1)',
+                        pointColor:  'rgba(' + COLORS[index] + ', 1)',
+                        pointStrokeColor: '#161616',
+                        pointHighlightFill:   '#161616',
+                        pointHighlightStroke: 'rgba(' + COLORS[index] + ', 1)',
+                        data: labels.map(label => obj[label])
+                    };
+                });
+                labels = labels.map(l => moment(l).format('YYYY WW'));
+                var ctx = document.getElementById(canvas_id).getContext("2d");
+                new Chart(ctx).Line({
+                    labels: labels,
+                    datasets: datasets
+                });
+            }
+            $.when(
+                MP.api.segment(PLUGIN_DL_AND_FAIL_COUNT, opts),
+                MP.api.segment(ISSUE_SELECTED, opts),
+                MP.api.segment(LOGIN_SUCCESS, opts)
+            ).done(function(
+                downloadedAndDLFailTotal,
+                issuesSelected,
+                loginSuccess,
+            ) {
+                insertChart('downloads', ['Total'], [ downloadedAndDLFailTotal.json[PLUGIN_DL_AND_FAIL_COUNT] ]);
+                insertChart('issuesSelected', ['Total', 'Referrer home'], [ issuesSelected.json[ISSUE_SELECTED] ]);
+                insertChart('logins', ['Total', 'Referrer home'], [ loginSuccess.json[LOGIN_SUCCESS] ]);
+            });
+        </script>
+    </body>
+</html>

@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Free trial</title>
+    <link rel="stylesheet" type="text/css" href="//fonts.googleapis.com/css?family=Open+Sans" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/0.0.1/prism.min.css">
+    <link rel="stylesheet" href="/styles/dashboard.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/0.0.1/prism.min.js"></script>
+</head>
+
+<style>
+    .menu {
+        height: 5%;
+        display: flex;
+        align-items: center;
+        background-color: #fff;
+        border-bottom: 1px solid #ddd;
+    }
+
+    .menu__item {
+        color: #999;
+        cursor: pointer;
+        padding: 0 1vh 0 1vh;
+        font-weight: bold;
+    }
+
+    .menu__item--separated {
+        margin-left: auto;
+    }
+
+    .menu__item.isActive,
+    .menu__item.hover {
+        color: #000;
+    }
+
+    .example {
+        position: relative;
+        height: 95%;
+        width: 100%;
+        display: none;
+        padding: 1vh;
+    }
+
+    .example.isActive {
+        display: block;
+    }
+
+    .template div {
+        outline: 1px dashed #999;
+        display: flex;
+    }
+
+    .example-partial {
+        padding: 10px 0;
+        display: flex;
+        align-items: baseline;
+        justify-content: space-between;
+        border-bottom: 1px dashed #ddd;
+    }
+
+    .example-partial strong {
+        background-color: #333;
+        color: white;
+        padding: 5px;
+    }
+
+    .copy-to-clipboard {
+        position: absolute;
+        top: 0;
+        right: 0;
+        border: 0;
+        padding: 1vh;
+        background-color: #fc52a4;
+        color: white;
+        text-transform: uppercase;
+        font-weight: bold;
+        cursor: pointer;
+    }
+
+    .code-textarea {
+        position: absolute;
+        top: 0;
+        opacity: 0;
+        pointer-events: none;
+    }
+
+    iframe img {
+        width: 100%;
+    }
+
+</style>
+
+<body>
+    <div class="menu">
+        <div class="menu__item js-menu-item isActive">Demo</div>
+        <div class="menu__item menu__item--separated js-menu-item">Template 1</div>
+        <div class="menu__item js-menu-item">Template 2</div>
+        <div class="menu__item js-menu-item">Template 3</div>
+        <div class="menu__item js-menu-item">Template 4</div>
+        <div class="menu__item js-menu-item">Docs</div>
+    </div>
+
+    <div class="example js-page isActive">
+        <div class="grid">
+            <div class="row">
+                <div class="col title">Panthers are cool!</div>
+            </div>
+            <div class="row">
+                <div class="col intro">
+                    This is an example page demonstrating how a dashboard page can be composed.
+                </div>
+            </div>
+            <div class="row row--separated">
+                <div class="col heading">This panther is very angry</div>
+                <div class="col heading">Uh! This panther is very sneaky</div>
+            </div>
+            <div class="row row--flex">
+                <div class="col">
+                    <img src="https://49.media.tumblr.com/c5fcc45f0fd51530dc9df70eb87e2b69/tumblr_mpljxrpLe61r2x63jo1_500.gif"></img>
+                </div>
+                <div class="col">
+                    <img src="http://24.media.tumblr.com/d3bd88b7d63d171b4c7ece45cb49db8c/tumblr_mkp6pdRTLW1qbxi45o2_500.gif"></img>
+                </div>
+            </div>
+            <div class="row row--separated">
+                <div class="col heading">This panther likes to jump</div>
+                <div class="col heading">Panther facts</div>
+                <div class="col heading">This panther is also very angry...</div>
+            </div>
+            <div class="row row--flex">
+                <div class="col">
+                    <img src="http://24.media.tumblr.com/5a711c4e5b724d6a34c7d1c1463ef707/tumblr_mkp6pdRTLW1qbxi45o9_500.gif"></img>
+                </div>
+                <div class="col">
+                    <div class="text">
+                        <ul>
+                            <li>They are black</li>
+                            <li>They are sneaky</li>
+                            <li>They are very angry</li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="col">
+                    <img src="https://45.media.tumblr.com/fad8dcc26e4fd40c80a4b21773af07ae/tumblr_mw2g55kwrv1t0uualo1_500.gif"></img>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="example js-example template js-page">
+        <div class="grid">
+            <div class="row">
+                <div class="col heading">heading</div>
+                <div class="col heading">heading</div>
+            </div>
+            <div class="row row--flex">
+                <div class="col">content</div>
+                <div class="col">content</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="example js-example template js-page">
+        <div class="grid">
+            <div class="row">
+                <div class="col heading">heading</div>
+            </div>
+            <div class="row row--flex">
+                <div class="col">content</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="example js-example template js-page">
+        <div class="grid">
+            <div class="row">
+                <div class="col title">title</div>
+            </div>
+            <div class="row row--separated">
+                <div class="col heading">heading</div>
+            </div>
+            <div class="row row--flex">
+                <div class="col">content</div>
+            </div>
+            <div class="row row--separated">
+                <div class="col heading">heading</div>
+            </div>
+            <div class="row row--flex">
+                <div class="col">content</div>
+            </div>
+        </div>
+    </div>
+
+    <div id="what" class="example js-example template js-page">
+        <div class="grid">
+            <div class="row">
+                <div class="col title">title</div>
+            </div>
+            <div class="row row--separated">
+                <div class="col heading">heading</div>
+                <div class="col heading">heading</div>
+            </div>
+            <div class="row row--flex">
+                <div class="col">content</div>
+                <div class="col">content</div>
+            </div>
+            <div class="row row--separated">
+                <div class="col heading">heading</div>
+                <div class="col heading">heading</div>
+            </div>
+            <div class="row row--flex">
+                <div class="col">content</div>
+                <div class="col">content</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="example js-page">
+        <div class="example-partial">
+            All dashboard pages should be composed from these classes.<br>
+            Check out the templates if you want to see how they can be used
+            together and you can copy the template code for an easy start.<br>
+            NOTE: Make sure to add the dashboard.css stylesheet to the top of your page.
+        </div>
+        <div class="example-partial">
+            <strong>.page</strong> Wrap the page in this class in order to control main padding and colors
+        </div>
+        <div class="example-partial">
+            <strong>.page--inverse</strong> A dark themed dashboard page with white text (grafana style)
+        </div>
+        <div class="example-partial">
+            <strong>.page--centered</strong> Adds spacing around the edges of the dashboard page
+        </div>
+        <div class="example-partial">
+            <strong>.grid</strong> Use this to define a grid that fills the page width and height
+        </div>
+        <div class="example-partial">
+            <strong>.row</strong> Used inside a grid
+        </div>
+        <div class="example-partial">
+            <strong>.row--flex</strong> A row that takes up as much vertical space as possible (useful for iframes)
+        </div>
+        <div class="example-partial">
+            <strong>.row--separated</strong> A row that gets spacing before
+        </div>
+        <div class="example-partial">
+            <strong>.col</strong> Used inside a row to provide blocks of the same width
+        </div>
+        <div class="example-partial">
+            <strong>.title</strong> A large page title for use in the top of the page
+        </div>
+        <div class="example-partial">
+            <strong>.heading</strong> A heading for a section of a page
+        </div>
+        <div class="example-partial">
+            <strong>.text</strong> Free longform text
+        </div>
+    </div>
+
+    <script src="//code.jquery.com/jquery-2.1.4.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/1.5.3/clipboard.min.js"></script>
+    <script>
+        $('.js-example').each(function(index, element) {
+            var $self = $(this);
+            var id = 'clip-' + index;
+            var buttonId = 'button-' + id;
+            var markup = $self.html();
+            var copyText = 'Get code';
+            var $textarea = $('<textarea class="code-textarea" id="' + id + '"></textarea>');
+            var $button = $('<button class="copy-to-clipboard" id="' + buttonId + '" data-clipboard-target="#' + id + '">' + copyText + '</button>');
+            $button.appendTo($self);
+            $textarea.val(markup).appendTo($self);
+
+            $button.on('click', function() {
+                $button.text('Copied!');
+
+                setTimeout(function(){
+                    $button.text(copyText);
+                }, 1000);
+            })
+
+            setTimeout(function(){
+                new Clipboard('#' + buttonId);
+            }, 1);
+        });
+
+        // $('#shit').val($('#what').html());
+        // new Clipboard('.js-btn');
+        $('.js-menu-item').on('click', function() {
+            $('.js-menu-item.isActive').removeClass('isActive');
+            $(this).addClass('isActive');
+            $('.js-page.isActive').removeClass('isActive');
+            $('.js-page').eq($(this).index()).addClass('isActive');
+        });
+    </script>
+</body>
+</html>

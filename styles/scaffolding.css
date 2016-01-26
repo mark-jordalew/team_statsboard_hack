@@ -1,0 +1,23 @@
+body,
+html {
+    font-family: 'Open Sans', sans-serif;
+    background-color: #F2F2F2;
+    height: 100%;
+    overflow: hidden;
+    color: #161616;
+}
+
+*, *:before, *:after {
+    box-sizing: border-box;
+}
+
+a {
+    color: initial;
+    text-decoration: none;
+}
+
+input {
+    border: 0;
+    padding: 0;
+    outline: none;
+}

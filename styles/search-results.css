@@ -1,0 +1,28 @@
+.search-results {
+    position: absolute;
+    top: 100%;
+    width: 100%;
+}
+
+.search-results__link {
+    cursor: pointer;
+    display: block;
+    font-family: 'Open Sans', sans-serif;
+    width: 100%;
+    line-height: 3vh;
+    padding: 0 1vh;
+    font-size: 1.2vh;
+    border-bottom: 1px solid #F2F2F2;
+    color: #999;
+    background-color: #262626;
+    border-bottom: 1px solid #404040;
+}
+
+.search-results__link:last-child {
+    border-bottom: 0;
+}
+
+.search-results__link.isActive {
+    background-color: #404040;
+    color: #F2F2F2;
+}

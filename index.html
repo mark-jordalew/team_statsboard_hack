@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Crocodiles Dashboard (build #{{build}})</title>
+    <link href='https://fonts.googleapis.com/css?family=Open+Sans:400,300,700' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" type="text/css" href="http://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css">
+    <link rel="stylesheet" type="text/css" href="styles/index.css">
+</head>
+<body>
+    <div class="progress-bar">
+        <div class="progress-bar__line js-progress-bar"></div>
+    </div>
+    <div class="header">
+        <div class="header__item header__logo header-logo js-logo">
+            <div class="header-logo__mark">
+                <img class="header-logo__image" src="https://s-media-cache-ak0.pinimg.com/236x/9e/94/48/9e9448b2b802bbe7bab449bc8b055476.jpg" alt="">
+            </div>
+            <div class="header-logo__type">Crocodiles dashboard</div>
+        </div>
+        <div class="header__item header__icon js-navicon">
+            <div class="ion-navicon"></div>
+        </div>
+        <div class="header__item header__search header-search">
+            <input type="text" placeholder="Search pages..." class="header-search-input js-search"></input>
+            <div class="header-search-icon ion-ios-search-strong"></div>
+            <div class="search-results js-search-results">
+                <!-- SEARCH RESULTS ARE APPENDED HERE -->
+            </div>
+        </div>
+        <div class="header__item js-api-key">
+            <div class="header__icon js-api-key-button">
+                <div class="ion-key"></div>
+            </div>
+            <div class="header-api js-api">
+                <div class="header-api__description">Your mixpanel API key & secret:</div>
+                <input type="text" placeholder="Enter key..." class="header-api__input header-api__key js-api-key"></input>
+                <input type="text" placeholder="Enter secret..." class="header-api__input header-api__secret js-api-secret"></input>
+            </div>
+        </div>
+        <div class="header__page-title js-header-page-title"></div>
+        <div class="header__item header__icon js-play-button">
+            <div class="ion-play"></div>
+        </div>
+        <div class="header__item header__icon js-pause-button">
+            <div class="ion-pause"></div>
+        </div>
+    </div>
+    <div class="app">
+        <div class="app__sidebar js-sidebar">
+            <div class="menu__label">Pages</div>
+            <div class="menu js-menu-carousel">
+                <!-- LINKS ARE APPENDED HERE -->
+            </div>
+            <div class="menu__label">Contributing tools</div>
+            <div class="menu js-menu-examples">
+                <!-- LINKS ARE APPENDED HERE -->
+            </div>
+            <div class="menu__label">Idle pages</div>
+            <div class="menu menu--discreet js-menu-idle">
+                <!-- LINKS ARE APPENDED HERE -->
+            </div>
+            <div class="menu">
+                <div class="menu__label">Source code</div>
+                <a target="_blank" href="https://github.com/issuu/publisher-suite/tree/master/resources/app_model/debug" class="menu__link">Github <span class="menu__link-icon ion-social-github"></span></a>
+            </div>
+        </div>
+        <div class="app__pages js-pages">
+            <!-- IFRAMES ARE APPENDED HERE -->
+        </div>
+    </div>
+
+    <script src="http://code.jquery.com/jquery-latest.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/fuse.js/1.3.1/fuse.min.js"></script>
+    <script src="index.js"></script>
+</body>
+</html>

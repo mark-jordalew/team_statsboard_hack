@@ -1,0 +1,47 @@
+.menu {}
+
+.menu__label {
+    background-color: #161616;
+    border-bottom: 1px solid #404040;
+    color: #F2F2F2;
+    font-family: 'Open Sans', sans-serif;
+    font-size: .8vh;
+    font-weight: 700;
+    padding: .5vh 1vh;
+    text-transform: uppercase;
+}
+
+.menu__link {
+    align-items: center;
+    border-bottom: 1px solid #404040;
+    color: #999;
+    cursor: pointer;
+    display: flex;
+    font-family: 'Open Sans', sans-serif;
+    font-size: 1.2vh;
+    font-weight: 300;
+    padding: 0 1vh;
+    font-weight: bold;
+    height: 3.5vh;
+    justify-content: space-between;
+}
+
+.menu--discreet .menu__link {
+    font-weight: normal;
+    font-size: .9vh;
+    height: 2.5vh;
+}
+
+.menu__link-icon {
+    font-size: 20px;
+}
+
+.menu__link:hover {
+    background-color: #404040;
+}
+
+.menu__link:active,
+.menu__link.isActive {
+    background-color: #333333;
+    color: #F2F2F2;
+}

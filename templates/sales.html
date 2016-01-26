@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Sales</title>
+    <link rel="stylesheet" type="text/css" href="//fonts.googleapis.com/css?family=Open+Sans" />
+    <link rel="stylesheet" href="styles/dashboard.css">
+</head>
+
+<body class="page page--centered">
+
+    <div class="grid">
+        <div class="row">
+            <div class="col title">Sales: Upsells & New Subscribers (weekly & monthly)</div>
+        </div>
+        <div class="row">
+            <div class="col intro">
+                Definition of sale: user initiated subscription changes that generates a charge. <br>
+                This excludes interval changes with a carry over and upsells during trial (e.g. plus to premium).<br>
+                Sign ups is a special case as no charge is generated due to trial. <br>
+                Note: as a control metric, trial creation and subscription errors are added to the graphs below.
+            </div>
+        </div>
+
+        <div class="row row--separated">
+            <div class="col heading">Sales Origin</div>
+        </div>
+        <div class="row row--flex">
+            <div class="col"><iframe id="graph-1-l" src="" frameborder="0"></iframe></div>
+            <div class="col"><iframe id="graph-1-r" src="" frameborder="0"></iframe></div>
+        </div>
+
+        <div class="row row--separated">
+            <div class="col heading">
+            Breakdown for upsells on Services Page (with referer or query parameter)
+            <br>
+            NOTE: ?r= accountnav, header, billing, /pricing are excluded
+            </div>
+        </div>
+        <div class="row row--flex">
+            <div class="col"><iframe id="graph-2-l" src="" frameborder="0"></iframe></div>
+            <div class="col"><iframe id="graph-2-r" src="" frameborder="0"></iframe></div>
+        </div>
+    </div>
+
+
+<script>
+
+// Upsells & new subscribers
+// ============================================================================
+
+var queryBody = `
+    SELECT s.created, 'signup' AS origin FROM userdb.payment_log_subscription s
+    WHERE s.referer like '%/signup/payment%'
+    AND (s.plan != 'free' or s.unlisted != 'unlisted-25')
+    AND s.recurly_reply = 'ok'
+
+    union all
+
+    SELECT s.created, 'services page' AS origin
+    FROM recurly.publisher_suite_dashboard_user_initiated_charges s
+    WHERE s.referer like '%/home/services%'
+
+    union all
+
+    SELECT s.created, 'upsell widget: embed' AS origin
+    FROM recurly.publisher_suite_dashboard_user_initiated_charges s
+    WHERE s.referer like '%/edit/embed%'
+
+    union all
+
+    SELECT s.created, 'Coupon mnt86tkp' AS origin
+    FROM recurly.publisher_suite_dashboard_user_initiated_charges s
+    WHERE s.referer like '%coupon=mnt86tkp%' and s.referer like '%/home/services%'
+
+    union all
+
+    SELECT s.created, '(errors)' AS origin FROM userdb.payment_log_subscription s
+    WHERE s.recurly_reply != 'ok'
+
+    union all
+
+    SELECT u_action.created, '(trial creation)' AS origin
+    FROM recurly.subscription sub
+    JOIN userdb.payment p ON (p.recurly_id = sub.account_code)
+    JOIN userdb.payment_log_subscription u_action USING (user_id)
+    WHERE
+        u_action.created BETWEEN
+            DATE_ADD(sub.trial_started_at, INTERVAL -10 MINUTE) AND DATE_ADD(sub.trial_started_at, INTERVAL 30 SECOND)
+        AND u_action.recurly_reply = 'ok'
+        AND (u_action.plan != 'free' or u_action.unlisted != 'unlisted-25')
+    GROUP BY sub.subscription_uuid
+`;
+
+var queryWeekly = `
+    SELECT week, count(*), origin FROM (
+        SELECT DATE_FORMAT(created,'%x-%v') AS week, origin FROM (
+            ${queryBody}
+        ) t2
+        where
+            DATE_FORMAT(created,'%x-%v') > '2015-28'
+            AND DATE_FORMAT(created,'%x-%v') != DATE_FORMAT(NOW(),'%x-%v')
+    ) t1
+    GROUP BY week, origin
+    ORDER BY week, origin;
+`;
+
+var queryMonthly = `
+    SELECT month, count(*), origin FROM (
+        SELECT DATE_FORMAT(created,'%Y-%m') AS month, origin FROM (
+            ${queryBody}
+        ) t2
+        where
+            DATE_FORMAT(created,'%Y-%m') > '2015-06'
+            AND DATE_FORMAT(created,'%Y-%m') != DATE_FORMAT(NOW(),'%Y-%m')
+    ) t1
+    GROUP BY month, origin
+    ORDER BY month, origin;
+`;
+
+
+
+// Breakdown of sales on services page with query params or referer
+// ============================================================================
+
+var queryBreakdownBody = `
+    SELECT s.created, 'upsell statistics' AS origin
+    FROM recurly.publisher_suite_dashboard_user_initiated_charges s
+    WHERE s.referer like '%r=statistics%'
+
+    union all
+
+    SELECT s.created, 'upsell upload' AS origin
+    FROM recurly.publisher_suite_dashboard_user_initiated_charges s
+    WHERE s.referer like '%r=singleUpload%'
+    OR s.referer like '%r=upload%'
+
+    union all
+
+    SELECT s.created, 'upsell edit info' AS origin
+    FROM recurly.publisher_suite_dashboard_user_initiated_charges s
+    WHERE s.referer like '%r=editInfo%'
+
+    union all
+
+    SELECT s.created, 'doc page 1/2' AS origin
+    FROM recurly.publisher_suite_dashboard_user_initiated_charges s
+    WHERE s.referer like '%r=docpage%'
+
+    union all
+
+    SELECT s.created, 'publisher home' AS origin
+    FROM recurly.publisher_suite_dashboard_user_initiated_charges s
+    WHERE s.referer like '%r=publisherHome%'
+
+    union all
+
+    SELECT s.created, 'email: recurly cancel' AS origin
+    FROM recurly.publisher_suite_dashboard_user_initiated_charges s
+    WHERE s.referer like '%recurly-cancelled%'
+
+    union all
+
+    SELECT s.created, 'email: support' AS origin
+    FROM recurly.publisher_suite_dashboard_user_initiated_charges s
+    WHERE s.referer like '%utm_source=issuu+Support%'
+
+    union all
+
+    SELECT s.created, 'email: other' AS origin
+    FROM recurly.publisher_suite_dashboard_user_initiated_charges s
+    WHERE s.referer like '%utm_medium=%'
+        and s.referer not like '%recurly-cancelled%'
+        and s.referer not like '%utm_source=issuu+Support%'
+
+    union all
+
+    SELECT s.created, 'entrypoint=' AS origin
+    FROM recurly.publisher_suite_dashboard_user_initiated_charges s
+    WHERE s.referer like '%entryPoint=%'
+
+    union all
+
+    SELECT s.created, 'Coupon mnt86tkp' AS origin
+    FROM recurly.publisher_suite_dashboard_user_initiated_charges s
+    WHERE s.referer like '%coupon=mnt86tkp%'
+
+    union all
+
+    SELECT s.created, 'upsell addServices=reader (?)' AS origin
+    FROM recurly.publisher_suite_dashboard_user_initiated_charges s
+    WHERE s.referer = 'https://issuu.com/home/services?addServices=reader'
+
+    union all
+
+    SELECT s.created, 'upsell reader_brandpackage (?)' AS origin
+    FROM recurly.publisher_suite_dashboard_user_initiated_charges s
+    WHERE s.referer = 'https://issuu.com/home/services?addServices=reader_brandpackage'
+
+    union all
+
+    SELECT created, '?' AS origin
+    FROM recurly.publisher_suite_dashboard_user_initiated_charges
+    WHERE referer like '%/home/services%'
+    and referer not like '%r=%'
+    and referer not like '%utm_medium=%'
+    and referer not like '%entryPoint=%'
+    and referer not like '%coupon=mnt86tkp%'
+    and referer != 'https://issuu.com/home/services?addServices=reader'
+    and referer != 'https://issuu.com/home/services?addServices=reader_brandpackage'
+    and referer != 'https://issuu.com/home/services'
+`;
+
+var queryBreakdownWeekly = `
+    SELECT week, count(*), origin FROM (
+        SELECT DATE_FORMAT(created,'%x-%v') AS week, origin FROM (
+            ${queryBreakdownBody}
+        ) t2
+        where
+            DATE_FORMAT(created,'%x-%v') > '2015-28'
+                AND DATE_FORMAT(created,'%x-%v') != DATE_FORMAT(NOW(),'%x-%v')
+    ) t1
+    GROUP BY week, origin
+    ORDER BY week, origin;
+`;
+
+var queryBreakdownMonthly = `
+    SELECT month, count(*), origin FROM (
+        SELECT DATE_FORMAT(created,'%Y-%m') AS month, origin FROM (
+            ${queryBreakdownBody}
+        ) t2
+        where
+            DATE_FORMAT(created,'%Y-%m') > '2015-06'
+            AND DATE_FORMAT(created,'%Y-%m') != DATE_FORMAT(NOW(),'%Y-%m')
+    ) t1
+    GROUP BY month, origin
+    ORDER BY month, origin;
+`;
+
+
+// Drawing using hmm:
+// ============================================================================
+
+function drawGraph(selector, query, xLabel) {
+    xLabel = encodeURIComponent(xLabel);
+    var graphHash = `%7B%22chartType%22%3A%22LineChart%22%2C%22containerId%22%3A%22chart%22%2C%22options%22%3A%7B%22animation%22%3A%7B%22startup%22%3Atrue%2C%22duration%22%3A500%7D%2C%22curveType%22%3A%22%22%2C%22legend%22%3A%22right%22%2C%22vAxis%22%3A%7B%22baseline%22%3A0%2C%22title%22%3A%22count(*)%22%7D%2C%22hAxis%22%3A%7B%22title%22%3A%22${xLabel}%22%2C%22useFormatFromData%22%3Atrue%2C%22minValue%22%3Anull%2C%22maxValue%22%3Anull%2C%22viewWindow%22%3Anull%2C%22viewWindowMode%22%3Anull%7D%2C%22title%22%3A%22%22%2C%22vAxes%22%3A%5B%7B%22title%22%3Anull%2C%22minValue%22%3Anull%2C%22maxValue%22%3Anull%2C%22useFormatFromData%22%3Atrue%2C%22viewWindow%22%3A%7B%22max%22%3Anull%2C%22min%22%3Anull%7D%7D%2C%7B%22useFormatFromData%22%3Atrue%2C%22viewWindow%22%3A%7B%22max%22%3Anull%2C%22min%22%3Anull%7D%2C%22minValue%22%3Anull%2C%22maxValue%22%3Anull%7D%5D%2C%22booleanRole%22%3A%22certainty%22%2C%22lineWidth%22%3A2%2C%22width%22%3Anull%2C%22height%22%3Anull%2C%22legendTextStyle%22%3A%7B%22color%22%3A%22%23222%22%2C%22fontSize%22%3A%228%22%7D%7D%7D`;
+    var url = `http://hmm.issuu.com/graph.html?query=${encodeURIComponent(query)}#${graphHash}`;
+    document.querySelector(selector).src = url;
+}
+
+drawGraph('#graph-1-l', queryWeekly, 'week');
+drawGraph('#graph-1-r', queryMonthly, 'month');
+
+drawGraph('#graph-2-l', queryBreakdownWeekly, 'week');
+drawGraph('#graph-2-r', queryBreakdownMonthly, 'month');
+
+</script>
+
+</body>
+</html>

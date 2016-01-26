@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Publisher Suite Backend (build #{{build}})</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="styles/reset.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/github-markdown-css/2.1.1/github-markdown.css">
+</head>
+
+<style>
+    body {
+        padding: 1vh;
+    }
+
+    .markdown {
+        background: white;
+        max-width: 900px;
+        margin: 0 auto;
+        padding: 50px;
+    }
+</style>
+
+<body class="markdown-body">
+    <div class="markdown">
+        <markdown></markdown>
+    </div>
+
+    <script src="//code.jquery.com/jquery-2.1.4.min.js"></script>
+    <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/marked/0.2.9/marked.min.js"></script>
+    <script type="text/javascript">
+        $('markdown').eq(0).load('/RELEASE_NOTES.md', function() {
+            $('markdown').html(marked($('markdown').text()));
+        });
+    </script>
+</body>
+</html>
