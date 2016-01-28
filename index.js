@@ -8,51 +8,51 @@ var pages = [
     ////////////////////////////////////////////////////////////////////////////////
     // Pages featured in carousel
     ////////////////////////////////////////////////////////////////////////////////
-    //{
-    //    pageType: pageTypes.CAROUSEL,
-    //    src: "http://grafana.issuu.com/dashboard/db/magma",
-    //    title: "Magma Home"
-    //},
-    //{
-    //    pageType: pageTypes.CAROUSEL,
-    //    src: "http://grafana.issuu.com/dashboard/db/magma2",
-    //    title: "Magma Home (2)"
-    //},
-    //{
-    //    pageType: pageTypes.CAROUSEL,
-    //    src: "http://grafana.issuu.com/dashboard/db/graphdb",
-    //    title: "graphdb"
-    //},
-    //{
-    //    pageType: pageTypes.CAROUSEL,
-    //    src: "http://grafana.issuu.com/dashboard/db/thin-layer",
-    //    title: "thin layer"
-    //},
+    {
+       pageType: pageTypes.CAROUSEL,
+       src: "http://grafana.issuu.com/dashboard/db/magma",
+       title: "Magma Home"
+    },
+    {
+       pageType: pageTypes.CAROUSEL,
+       src: "http://grafana.issuu.com/dashboard/db/magma2",
+       title: "Magma Home (2)"
+    },
+    {
+       pageType: pageTypes.CAROUSEL,
+       src: "http://grafana.issuu.com/dashboard/db/graphdb",
+       title: "graphdb"
+    },
+    {
+       pageType: pageTypes.CAROUSEL,
+       src: "http://grafana.issuu.com/dashboard/db/thin-layer",
+       title: "thin layer"
+    },
     {
         pageType: pageTypes.CAROUSEL,
         src: "http://grafana.issuu.com/dashboard/db/login",
         title: "issuu login"
     },
-    //{
-    //    pageType: pageTypes.CAROUSEL,
-    //    src: "http://grafana.issuu.com/dashboard/db/clippings",
-    //    title: "clippings"
-    //},
-    //{
-    //    pageType: pageTypes.CAROUSEL,
-    //    src: "http://grafana.issuu.com/dashboard/db/tokens",
-    //    title: "Token distribution"
-    //},
-    //{
-    //    pageType: pageTypes.CAROUSEL,
-    //    src: "/templates/mixpanel_crocs.html",
-    //    title: "Mixpanel"
-    //},
     {
-        pageType: pageTypes.CAROUSEL,
-        src: "/templates/mixpanel_mini.html",
-        title: "Mixpanel-mini"
+       pageType: pageTypes.CAROUSEL,
+       src: "http://grafana.issuu.com/dashboard/db/clippings",
+       title: "clippings"
     },
+    {
+       pageType: pageTypes.CAROUSEL,
+       src: "http://grafana.issuu.com/dashboard/db/tokens",
+       title: "Token distribution"
+    },
+    {
+       pageType: pageTypes.CAROUSEL,
+       src: "/templates/mixpanel_crocs.html",
+       title: "Mixpanel"
+    },
+    // {
+    //     pageType: pageTypes.CAROUSEL,
+    //     src: "/templates/mixpanel_mini.html",
+    //     title: "Mixpanel-mini"
+    // },
     //{
     //    pageType: pageTypes.CAROUSEL,
     //    src: "/templates/release-notes.html",
