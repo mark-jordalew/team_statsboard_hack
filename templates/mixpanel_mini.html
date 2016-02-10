@@ -1,109 +1,98 @@
 <!DOCTYPE html>
 <html lang="en">
-    <head>
-        <meta charset="UTF-8">
-        <title>Mixpanel</title>
-        <!-- mixpanel lib include -->
-        <script src='mixpanel_ap_include.js'></script>
-        <script src="https://cdn.mxpnl.com/libs/mixpanel-platform/build/mixpanel-platform.v0.latest.min.js"></script>
-        <!-- cloudflare chart lib include -->
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/1.0.2/Chart.min.js"></script>
-        <!-- styles -->
-        <link rel="stylesheet" type="text/css" href="//fonts.googleapis.com/css?family=Open+Sans" />
-        <link rel="stylesheet" href="/styles/dashboard.css">
-    </head>
+  <head>
+    <title>Mixpanel</title>
+    <meta charset="utf-8">
+    <!-- styles -->
+    <link rel="stylesheet" type="text/css" href="https://cdn.mxpnl.com/libs/mixpanel-platform/css/reset.css">
+    <link rel="stylesheet" type="text/css" href="https://cdn.mxpnl.com/libs/mixpanel-platform/build/mixpanel-platform.v0.latest.min.css">
+    <style>
+      html,body{}
+      .graph{
+        height: 300px,
+        margin-bottom: 50px
+      }
+    </style>
+    <!-- mixpanel lib include -->
+    <script src="https://cdn.mxpnl.com/libs/mixpanel-platform/build/mixpanel-platform.v0.latest.min.js"></script>
+    <!-- cloudflare chart lib include -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/lodash.js/3.9.3/lodash.js"></script>
+  </head>
 
-    <body class="page page--inverse page--centered">
-        <div class="grid">
-          <div class="col">
-              <div id='datepicker'></div>
-          </div>
-            <div class="row row--separated">
-                <div class="col heading">Indesign Plugin (data downloads and fails)</div>
-                <div class="col heading">Issues Selected</div>
-                <div class="col heading">Successful Plugin Logins</div>
-            </div>
-            <div class="row row--flex">
-                <div class="col">
-                    <canvas id="downloads"></canvas>
-                </div>
-                <div class="col">
-                    <canvas id="issuesSelected"></canvas>
-                </div>
-                <div class="col">
-                    <canvas id="logins"></canvas>
-                </div>
-            </div>
-            <div class="col">
-                <div class="text">
-                    <ul>
-                        <li>2015-01-11 (W02): release</li>
-                    </ul>
-                </div>
-            </div>
-        </div>
+  <body class="mixpanel-platform-body">
+    <div id="datepicker"></div>
+    <h1>Magma Tracking (mixpanel)</h1>
 
-        <script>
-            // datepicker div - get everything else working first.
-            // $('#datepicker').MPDatepicker().on('change', function(dateRange)){
-            //  console.log(daterange.from);
-            //  console.log(daterange.to);
-            //}
+    <h2>Indesign Plugin</h2>
+    <p>Downloads (success and fail)</p>
+    <div id="graph_1" class="graph"></div>
 
-            Chart.defaults.global.multiTooltipTemplate = "<%= datasetLabel %> - <%= value %>";
-            Chart.defaults.global.scaleLineColor = "#262626";
-            Chart.defaults.global.animation = false;
-            // opts for chart creation for span of ten days
-            var DATE_FROM = () => moment().subtract(10, 'week');
-            var DATE_TO   = () => moment().startOf('week');
-            var opts = {
-                from: DATE_FROM(),
-                to:   DATE_TO(),
-                unit: 'week'
-            };
-            var COLOR_GREEN  = '0,153,76';
-            var COLOR_GREY   = '180,180,180';
-            var COLOR_ORANGE = '205,102,0';
-            var COLORS       = [COLOR_GREEN, COLOR_GREY];
-            // Crocodile events
-            var PLUGING_DL_AND_FAIL_COUNT = 'EXTENSION:MAGMA_EXTENSION_NITIALIZED'
-            var ISSUE_SELECTED            = 'EXTENSION:ISSUE_SELECTED'
-            var LOGIN_SUCCESS             = 'EXTENSION:LOGIN_SUCCESS'
-            //
-            function insertChart(canvas_id, tooltipLabels, mpjsonresponse) {
-                var labels   = Object.keys(mpjsonresponse[0]).sort();
-                var datasets = mpjsonresponse.map(function(obj, index) {
-                    return {
-                        label: tooltipLabels[index],
-                        fillColor:   'rgba(' + COLORS[index] + ', 0.2)',
-                        strokeColor: 'rgba(' + COLORS[index] + ', 1)',
-                        pointColor:  'rgba(' + COLORS[index] + ', 1)',
-                        pointStrokeColor: '#161616',
-                        pointHighlightFill:   '#161616',
-                        pointHighlightStroke: 'rgba(' + COLORS[index] + ', 1)',
-                        data: labels.map(label => obj[label])
-                    };
-                });
-                labels = labels.map(l => moment(l).format('YYYY WW'));
-                var ctx = document.getElementById(canvas_id).getContext("2d");
-                new Chart(ctx).Line({
-                    labels: labels,
-                    datasets: datasets
-                });
-            }
-            $.when(
-                MP.api.segment(PLUGIN_DL_AND_FAIL_COUNT, opts),
-                MP.api.segment(ISSUE_SELECTED, opts),
-                MP.api.segment(LOGIN_SUCCESS, opts)
-            ).done(function(
-                downloadedAndDLFailTotal,
-                issuesSelected,
-                loginSuccess,
-            ) {
-                insertChart('downloads', ['Total'], [ downloadedAndDLFailTotal.json[PLUGIN_DL_AND_FAIL_COUNT] ]);
-                insertChart('issuesSelected', ['Total', 'Referrer home'], [ issuesSelected.json[ISSUE_SELECTED] ]);
-                insertChart('logins', ['Total', 'Referrer home'], [ loginSuccess.json[LOGIN_SUCCESS] ]);
-            });
-        </script>
-    </body>
+    <h2>Number of issues selected</h2>
+    <p>Words words words</p>
+    <div id="graph2" class="graph"></div>
+
+    <h2>Successful Logins</h2>
+    <p>We can do quite complicated queries on this page.</p>
+    <div id="graph3" class="graph"></div>
+
+
+    <script>
+      $(document).ready(function(){
+      // datepicker div - get everything else working first.
+      // ----------
+      // $('#datepicker').MPDatepicker().on('change', function(dateRange){
+      // var DATE_FROM = daterange.from;
+      // var DATE_TO   = daterange.to;
+      // });
+
+        var DATE_FROM = moment().subtract(10, 'week');
+        var DATE_TO   = moment();
+
+      // Set api key and secret
+      // ----------------------
+        MP.api.setCredentials(localStorage.getItem('issuu_mixpanel_api_key'), localStorage.getItem('issuu_mixpanel_api_secret'));
+        console.log(localStorage.getItem('issuu_mixpanel_api_key'));
+        console.log(localStorage.getItem('issuu_mixpanel_api_secret'));
+
+
+
+
+      // Crocodile events
+      // ----------------
+        var EVENT_1 = 'EXTENSION:MAGMA_EXTENSION_INITIALIZED';
+        var EVENT_2 = 'EXTENSION:ISSUE_SELECTED';
+        var EVENT_3 = 'EXTENSION:LOGIN_SUCCESS';
+
+      // Crocodile Queries
+      // -----------------
+      function params(query) {
+          return{
+            from:  DATE_FROM,
+            to:    DATE_TO,
+            type:  'unique',
+            unit:  'week',
+            where: query
+          };
+        }
+      //      var where_1 = ''
+      //      var where_2 = ''
+      //      var where_3 = ''
+
+      // get query segment
+      // -----------------
+        var seg_1 = MP.api.segment(EVENT_1, params());
+        var seg_2 = MP.api.segment(EVENT_2, params());
+        var seg_3 = MP.api.segment(EVENT_3, params());
+
+      // draw chart
+      // ----------
+        $.when(seg_1, seg_2, seg_3).done(function(res_1, res_2, res_3) { $('#graph_1').MPChart( {chartType: 'line',  data: res_1, yLabel: 'Downloads'} );
+        });
+        $.when(seg_2).done(function(res_2) { $('#graph_2').MPChart( {chartType: 'line',  data: res_2, yLabel: 'Issues Selected'} );
+        });
+        $.when(seg_3).done(function(res_3) { $('#graph_3').MPChart( {chartType: 'line',  data: res_3, yLabel: 'Logins'} );
+        });
+      });
+    </script>
+  </body>
 </html>

@@ -8,56 +8,56 @@ var pages = [
     ////////////////////////////////////////////////////////////////////////////////
     // Pages featured in carousel
     ////////////////////////////////////////////////////////////////////////////////
-    {
-       pageType: pageTypes.CAROUSEL,
-       src: "http://grafana.issuu.com/dashboard/db/magma",
-       title: "Magma Home"
-    },
-    {
-       pageType: pageTypes.CAROUSEL,
-       src: "http://grafana.issuu.com/dashboard/db/magma2",
-       title: "Magma Home (2)"
-    },
-    {
-       pageType: pageTypes.CAROUSEL,
-       src: "http://grafana.issuu.com/dashboard/db/graphdb",
-       title: "graphdb"
-    },
-    {
-       pageType: pageTypes.CAROUSEL,
-       src: "http://grafana.issuu.com/dashboard/db/thin-layer",
-       title: "thin layer"
-    },
+    // {
+    //    pageType: pageTypes.CAROUSEL,
+    //    src: "http://grafana.issuu.com/dashboard/db/magma",
+    //    title: "Magma Home"
+    // },
+    // {
+    //    pageType: pageTypes.CAROUSEL,
+    //    src: "http://grafana.issuu.com/dashboard/db/magma2",
+    //    title: "Magma Home (2)"
+    // },
+    // {
+    //    pageType: pageTypes.CAROUSEL,
+    //    src: "http://grafana.issuu.com/dashboard/db/graphdb",
+    //    title: "graphdb"
+    // },
+    // {
+    //    pageType: pageTypes.CAROUSEL,
+    //    src: "http://grafana.issuu.com/dashboard/db/thin-layer",
+    //    title: "thin layer"
+    // },
+    // {
+    //     pageType: pageTypes.CAROUSEL,
+    //     src: "http://grafana.issuu.com/dashboard/db/login",
+    //     title: "issuu login"
+    // },
+    // {
+    //    pageType: pageTypes.CAROUSEL,
+    //    src: "http://grafana.issuu.com/dashboard/db/clippings",
+    //    title: "clippings"
+    // },
+    // {
+    //    pageType: pageTypes.CAROUSEL,
+    //    src: "http://grafana.issuu.com/dashboard/db/tokens",
+    //    title: "Token distribution"
+    // },
+    // {
+    //    pageType: pageTypes.CAROUSEL,
+    //    src: "/templates/mixpanel_crocs.html",
+    //    title: "Mixpanel"
+    // },
     {
         pageType: pageTypes.CAROUSEL,
-        src: "http://grafana.issuu.com/dashboard/db/login",
-        title: "issuu login"
-    },
-    {
-       pageType: pageTypes.CAROUSEL,
-       src: "http://grafana.issuu.com/dashboard/db/clippings",
-       title: "clippings"
-    },
-    {
-       pageType: pageTypes.CAROUSEL,
-       src: "http://grafana.issuu.com/dashboard/db/tokens",
-       title: "Token distribution"
-    },
-    {
-       pageType: pageTypes.CAROUSEL,
-       src: "/templates/mixpanel_crocs.html",
-       title: "Mixpanel"
+        src: "/templates/mixpanel_mini.html",
+        title: "mixpanel-mini"
     },
     // {
     //     pageType: pageTypes.CAROUSEL,
-    //     src: "/templates/mixpanel_mini.html",
-    //     title: "Mixpanel-mini"
+    //     src: "/templates/release-notes.html",
+    //     title: "Release notes"
     // },
-    //{
-    //    pageType: pageTypes.CAROUSEL,
-    //    src: "/templates/release-notes.html",
-    //    title: "Release notes"
-    //},
     ////////////////////////////////////////////////////////////////////////////////
     // Example/development pages
     ////////////////////////////////////////////////////////////////////////////////
@@ -69,11 +69,11 @@ var pages = [
     ////////////////////////////////////////////////////////////////////////////////
     // Idle/unused pages
     ////////////////////////////////////////////////////////////////////////////////
-    {
-        pageType: pageTypes.IDLE,
-        src: "/templates/mixpanel_upsell.html",
-        title: "Mixpanel: Upsell"
-    },
+    //{
+    //    pageType: pageTypes.IDLE,
+    //    src: "/templates/mixpanel_upsell.html",
+    //    title: "Mixpanel: Upsell"
+    //},
 ];
 
 
@@ -102,7 +102,7 @@ if (secret) {
 // Set UI api key calues
 $('.js-api-key').val(localStorage.getItem('issuu_mixpanel_api_key'));
 $('.js-api-secret').val(localStorage.getItem('issuu_mixpanel_api_secret'));
-
+// localStorage.clear();
 
 ////////////////////////////////////////////////////////////////////////////////
 // Append content
@@ -128,7 +128,7 @@ pages.forEach(function(page, index) {
     }
 });
 
-// Append pages
+// Append api key and secret to pages
 pages.forEach(function(page, index) {
     var apiKey = localStorage.getItem('issuu_mixpanel_api_key');
     var apiSecret = localStorage.getItem('issuu_mixpanel_api_secret');
