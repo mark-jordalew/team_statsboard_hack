@@ -24,17 +24,17 @@
     <div class="grid">
       <div class="row row--separated">
         <div class="col heading">
-          <h2>Indesign Plugin</h2>
+          <h2>Page Upload Success</h2>
           <div id="graph_1" class="graph"></div>
           <p>Downloads (success and fail)</p>
         </div><br>
         <div class="col heading">
-          <h2>Number of issues selected</h2>
+          <h2>Page Upload Fail</h2>
           <div id="graph_2" class="graph"></div>
           <p>Words words words</p>
         </div><br>
         <div class="col heading">
-          <h2>Successful Logins</h2>
+          <h2>Layout Upload Fail</h2>
           <div id="graph_3" class="graph"></div>
           <p>We can do quite complicated queries on this page.</p>
         </div>
@@ -61,9 +61,9 @@
 
       // Crocodile events
       // ----------------
-        var EVENT_1 = 'EXTENSION:MAGMA_EXTENSION_INITIALIZED';
-        var EVENT_2 = 'EXTENSION:ISSUE_SELECTED';
-        var EVENT_3 = 'EXTENSION:LOGIN_SUCCESS';
+        var EVENT_1 = 'EXTENSION:MAGMA_NOTIFY_PAGE_UPLOAD_SUCCESS';
+        var EVENT_2 = 'EXTENSION:MAGMA_NOTIFY_PAGE_UPLOAD_FAILED';
+        var EVENT_3 = 'EXTENSION:UPLOAD_LAYOUT_FAILED';
 
       // Crocodile Queries
       // -----------------
@@ -89,9 +89,9 @@
       // draw charts
       // -----------
         $.when($eg_1, $eg_2, $eg_3).done(function(res_1, res_2, res_3) {
-          $('#graph_1').MPChart( {chartType: 'line',  data: res_1`, yLabel: 'Downloads'} );
-          $('#graph_2').MPChart( {chartType: 'line',  data: res_2, yLabel: 'Issues Selected'} );
-          $('#graph_3').MPChart( {chartType: 'line',  data: res_3, yLabel: 'Logins'} );
+          $('#graph_1').MPChart( {chartType: 'line', data: res_1, yLabel: 'Page Upload Success'} );
+          $('#graph_2').MPChart( {chartType: 'line', data: res_2, yLabel: 'Page Upload Failed'} );
+          $('#graph_3').MPChart( {chartType: 'line', data: res_3, yLabel: 'Layout Upload Fails'} );
         });
       });
     </script>

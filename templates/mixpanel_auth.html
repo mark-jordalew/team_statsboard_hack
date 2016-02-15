@@ -24,19 +24,24 @@
     <div class="grid">
       <div class="row row--separated">
         <div class="col heading">
-          <h2>Indesign Plugin</h2>
+          <h2>InDesign Plugin Initialised</h2>
           <div id="graph_1" class="graph"></div>
-          <p>Downloads (success and fail)</p>
-        </div><br>
-        <div class="col heading">
-          <h2>Number of issues selected</h2>
-          <div id="graph_2" class="graph"></div>
-          <p>Words words words</p>
+          <p>No Specific Query</p>
         </div><br>
         <div class="col heading">
           <h2>Successful Logins</h2>
+          <div id="graph_2" class="graph"></div>
+          <p>No Specific Query</p>
+        </div><br>
+        <div class="col heading">
+          <h2>Unsuccessful Logins</h2>
           <div id="graph_3" class="graph"></div>
-          <p>We can do quite complicated queries on this page.</p>
+          <p>No Specific Query</p>
+        </div>
+        <div class="col heading">
+          <h2>Successful Loguts</h2>
+          <div id="graph_4" class="graph"></div>
+          <p>No Specific Query</p>
         </div>
       </div>
     </div>
@@ -62,8 +67,10 @@
       // Crocodile events
       // ----------------
         var EVENT_1 = 'EXTENSION:MAGMA_EXTENSION_INITIALIZED';
-        var EVENT_2 = 'EXTENSION:ISSUE_SELECTED';
-        var EVENT_3 = 'EXTENSION:LOGIN_SUCCESS';
+        var EVENT_2 = 'EXTENSION:LOGIN_SUCCESS';
+        var EVENT_3 = 'EXTENSION:LOGIN_FAILED';
+        var EVENT_4 = 'EXTENSION:LOGOUT_SUCCESS';
+
 
       // Crocodile Queries
       // -----------------
@@ -85,13 +92,15 @@
         var $eg_1 = MP.api.segment(EVENT_1, params());
         var $eg_2 = MP.api.segment(EVENT_2, params());
         var $eg_3 = MP.api.segment(EVENT_3, params());
+        var $eg_4 = MP.api.segment(EVENT_4, params());
 
       // draw charts
       // -----------
-        $.when($eg_1, $eg_2, $eg_3).done(function(res_1, res_2, res_3) {
-          $('#graph_1').MPChart( {chartType: 'line',  data: res_1`, yLabel: 'Downloads'} );
-          $('#graph_2').MPChart( {chartType: 'line',  data: res_2, yLabel: 'Issues Selected'} );
-          $('#graph_3').MPChart( {chartType: 'line',  data: res_3, yLabel: 'Logins'} );
+        $.when($eg_1, $eg_2, $eg_3, $eg_4).done(function(res_1, res_2, res_3, res_4) {
+          $('#graph_1').MPChart( {chartType: 'line',  data: res_1, yLabel: 'Plugin Initialised'} );
+          $('#graph_2').MPChart( {chartType: 'line',  data: res_2, yLabel: 'Successful Login'} );
+          $('#graph_3').MPChart( {chartType: 'line',  data: res_3, yLabel: 'Failed Login'} );
+          $('#graph_4').MPChart( {chartType: 'line',  data: res_4, yLabel: 'Successful Logout'} );
         });
       });
     </script>

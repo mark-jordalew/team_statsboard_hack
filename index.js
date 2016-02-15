@@ -13,46 +13,61 @@ var pages = [
        src: "http://grafana.issuu.com/dashboard/db/magma",
        title: "Magma Home"
     },
-    // {
-    //    pageType: pageTypes.CAROUSEL,
-    //    src: "http://grafana.issuu.com/dashboard/db/magma2",
-    //    title: "Magma Home (2)"
-    // },
-    // {
-    //    pageType: pageTypes.CAROUSEL,
-    //    src: "http://grafana.issuu.com/dashboard/db/graphdb",
-    //    title: "graphdb"
-    // },
-    // {
-    //    pageType: pageTypes.CAROUSEL,
-    //    src: "http://grafana.issuu.com/dashboard/db/thin-layer",
-    //    title: "thin layer"
-    // },
-    // {
-    //     pageType: pageTypes.CAROUSEL,
-    //     src: "http://grafana.issuu.com/dashboard/db/login",
-    //     title: "issuu login"
-    // },
-    // {
-    //    pageType: pageTypes.CAROUSEL,
-    //    src: "http://grafana.issuu.com/dashboard/db/clippings",
-    //    title: "clippings"
-    // },
-    // {
-    //    pageType: pageTypes.CAROUSEL,
-    //    src: "http://grafana.issuu.com/dashboard/db/tokens",
-    //    title: "Token distribution"
-    // },
     {
         pageType: pageTypes.CAROUSEL,
-        src: "/templates/mixpanel_mini.html",
-        title: "mixpanel-mini"
+        src: "http://grafana.issuu.com/dashboard/db/magma2",
+        title: "Magma Home (2)"
+     },
+     {
+        pageType: pageTypes.CAROUSEL,
+        src: "http://grafana.issuu.com/dashboard/db/graphdb",
+        title: "graphdb"
+     },
+     {
+        pageType: pageTypes.CAROUSEL,
+        src: "http://grafana.issuu.com/dashboard/db/thin-layer",
+        title: "thin layer"
+     },
+     {
+         pageType: pageTypes.CAROUSEL,
+         src: "http://grafana.issuu.com/dashboard/db/login",
+         title: "issuu login"
+     },
+     {
+        pageType: pageTypes.CAROUSEL,
+        src: "http://grafana.issuu.com/dashboard/db/clippings",
+        title: "clippings"
+     },
+     {
+        pageType: pageTypes.CAROUSEL,
+        src: "http://grafana.issuu.com/dashboard/db/tokens",
+        title: "Token distribution"
+     },
+    {
+        pageType: pageTypes.CAROUSEL,
+        src: "/templates/mixpanel_auth.html",
+        title: "InDesign Authentication"
     },
-    // {
-    //     pageType: pageTypes.CAROUSEL,
-    //     src: "/templates/release-notes.html",
-    //     title: "Release notes"
-    // },
+    {
+        pageType: pageTypes.CAROUSEL,
+        src: "/templates/mixpanel_dls.html",
+        title: "InDesign Downloads"
+    },
+    {
+        pageType: pageTypes.CAROUSEL,
+        src: "/templates/mixpanel_upls.html",
+        title: "InDesign Uploads"
+    },
+    {
+        pageType: pageTypes.CAROUSEL,
+        src: "/templates/mixpanel_selectionss.html",
+        title: "InDesign User Actions"
+    },
+     {
+         pageType: pageTypes.CAROUSEL,
+         src: "/templates/release-notes.html",
+         title: "Release notes"
+     },
     ////////////////////////////////////////////////////////////////////////////////
     // Example/development pages
     ////////////////////////////////////////////////////////////////////////////////
@@ -62,7 +77,7 @@ var pages = [
         title: 'Example page',
     },
     ////////////////////////////////////////////////////////////////////////////////
-    // Idle/unused pages
+    // THIS IS A NICE PAGE
     ////////////////////////////////////////////////////////////////////////////////
     //{
     //    pageType: pageTypes.IDLE,
@@ -88,6 +103,7 @@ function getParameterByName(name) {
 var key = getParameterByName('api_key');
 var secret = getParameterByName('api_secret');
 
+// ** REALLY ** want to get the key and secret from the dropdown text box.
 // var key = getElementById('api_key');
 // var secret = getElementById('api_secret');
 
