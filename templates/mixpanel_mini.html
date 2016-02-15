@@ -21,20 +21,25 @@
 
   <body class="mixpanel-platform-body">
     <div id="datepicker"></div>
-    <h1>Magma Tracking (mixpanel)</h1>
-
-    <h2>Indesign Plugin</h2>
-    <p>Downloads (success and fail)</p>
-    <div id="graph_1" class="graph"></div>
-
-    <h2>Number of issues selected</h2>
-    <p>Words words words</p>
-    <div id="graph2" class="graph"></div>
-
-    <h2>Successful Logins</h2>
-    <p>We can do quite complicated queries on this page.</p>
-    <div id="graph3" class="graph"></div>
-
+    <div class="grid">
+      <div class="row row--separated">
+        <div class="col heading">
+          <h2>Indesign Plugin</h2>
+          <div id="graph_1" class="graph"></div>
+          <p>Downloads (success and fail)</p>
+        </div><br>
+        <div class="col heading">
+          <h2>Number of issues selected</h2>
+          <div id="graph_2" class="graph"></div>
+          <p>Words words words</p>
+        </div><br>
+        <div class="col heading">
+          <h2>Successful Logins</h2>
+          <div id="graph_3" class="graph"></div>
+          <p>We can do quite complicated queries on this page.</p>
+        </div>
+      </div>
+    </div>
 
     <script>
       $(document).ready(function(){
@@ -45,17 +50,14 @@
       // var DATE_TO   = daterange.to;
       // });
 
-        var DATE_FROM = moment().subtract(10, 'week');
-        var DATE_TO   = moment();
+      var DATE_FROM = moment().subtract(30, 'day');
+      var DATE_TO   = moment();
 
       // Set api key and secret
       // ----------------------
         MP.api.setCredentials(localStorage.getItem('issuu_mixpanel_api_key'), localStorage.getItem('issuu_mixpanel_api_secret'));
         console.log(localStorage.getItem('issuu_mixpanel_api_key'));
         console.log(localStorage.getItem('issuu_mixpanel_api_secret'));
-
-
-
 
       // Crocodile events
       // ----------------
@@ -70,7 +72,7 @@
             from:  DATE_FROM,
             to:    DATE_TO,
             type:  'unique',
-            unit:  'week',
+            unit:  'day',
             where: query
           };
         }
@@ -80,17 +82,16 @@
 
       // get query segment
       // -----------------
-        var seg_1 = MP.api.segment(EVENT_1, params());
-        var seg_2 = MP.api.segment(EVENT_2, params());
-        var seg_3 = MP.api.segment(EVENT_3, params());
+        var $eg_1 = MP.api.segment(EVENT_1, params());
+        var $eg_2 = MP.api.segment(EVENT_2, params());
+        var $eg_3 = MP.api.segment(EVENT_3, params());
 
-      // draw chart
-      // ----------
-        $.when(seg_1, seg_2, seg_3).done(function(res_1, res_2, res_3) { $('#graph_1').MPChart( {chartType: 'line',  data: res_1, yLabel: 'Downloads'} );
-        });
-        $.when(seg_2).done(function(res_2) { $('#graph_2').MPChart( {chartType: 'line',  data: res_2, yLabel: 'Issues Selected'} );
-        });
-        $.when(seg_3).done(function(res_3) { $('#graph_3').MPChart( {chartType: 'line',  data: res_3, yLabel: 'Logins'} );
+      // draw charts
+      // -----------
+        $.when($eg_1, $eg_2, $eg_3).done(function(res_1, res_2, res_3) {
+          $('#graph_1').MPChart( {chartType: 'line',  data: res_1, yLabel: 'Downloads'} );
+          $('#graph_2').MPChart( {chartType: 'line',  data: res_2, yLabel: 'Issues Selected'} );
+          $('#graph_3').MPChart( {chartType: 'line',  data: res_3, yLabel: 'Logins'} );
         });
       });
     </script>

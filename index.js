@@ -8,11 +8,11 @@ var pages = [
     ////////////////////////////////////////////////////////////////////////////////
     // Pages featured in carousel
     ////////////////////////////////////////////////////////////////////////////////
-    // {
-    //    pageType: pageTypes.CAROUSEL,
-    //    src: "http://grafana.issuu.com/dashboard/db/magma",
-    //    title: "Magma Home"
-    // },
+    {
+       pageType: pageTypes.CAROUSEL,
+       src: "http://grafana.issuu.com/dashboard/db/magma",
+       title: "Magma Home"
+    },
     // {
     //    pageType: pageTypes.CAROUSEL,
     //    src: "http://grafana.issuu.com/dashboard/db/magma2",
@@ -42,11 +42,6 @@ var pages = [
     //    pageType: pageTypes.CAROUSEL,
     //    src: "http://grafana.issuu.com/dashboard/db/tokens",
     //    title: "Token distribution"
-    // },
-    // {
-    //    pageType: pageTypes.CAROUSEL,
-    //    src: "/templates/mixpanel_crocs.html",
-    //    title: "Mixpanel"
     // },
     {
         pageType: pageTypes.CAROUSEL,
@@ -85,13 +80,17 @@ var pages = [
 function getParameterByName(name) {
     name = name.replace(/[\[]/, "\\[").replace(/[\]]/, "\\]");
     var regex = new RegExp("[\\?&]" + name + "=([^&#]*)"),
-        results = regex.exec(location.search);
+        results = regex.exec(window.location.href);
     return results === null ? "" : decodeURIComponent(results[1].replace(/\+/g, " "));
 }
 
 // Store mixpanel api key + secret localstorage
 var key = getParameterByName('api_key');
 var secret = getParameterByName('api_secret');
+
+// var key = getElementById('api_key');
+// var secret = getElementById('api_secret');
+
 if (key) {
     localStorage.setItem('issuu_mixpanel_api_key', key);
 }
