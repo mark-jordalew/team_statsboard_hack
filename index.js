@@ -63,11 +63,11 @@ var pages = [
         src: "/templates/mixpanel_selectionss.html",
         title: "InDesign User Actions"
     },
-     {
-         pageType: pageTypes.CAROUSEL,
-         src: "/templates/release-notes.html",
-         title: "Release notes"
-     },
+    // {
+    //     pageType: pageTypes.CAROUSEL,
+    //     src: "/templates/release-notes.html",
+    //     title: "Release notes"
+    // },
     ////////////////////////////////////////////////////////////////////////////////
     // Example/development pages
     ////////////////////////////////////////////////////////////////////////////////
