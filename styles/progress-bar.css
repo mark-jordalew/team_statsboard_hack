@@ -9,7 +9,7 @@
 
 .progress-bar {
     position: relative;
-    height: .2vh;
+    height: .5vh;
     background-color: #ADADAD;
     width: 100%;
 }

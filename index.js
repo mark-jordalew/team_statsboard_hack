@@ -9,40 +9,50 @@ var pages = [
     // Pages featured in carousel
     ////////////////////////////////////////////////////////////////////////////////
     {
-       pageType: pageTypes.CAROUSEL,
-       src: "http://grafana.issuu.com/dashboard/db/magma",
-       title: "Magma Home"
+        pageType: pageTypes.CAROUSEL,
+        src: "http://grafana.issuu.com/dashboard/db/magma",
+        title: "Magma Home"
     },
     {
         pageType: pageTypes.CAROUSEL,
         src: "http://grafana.issuu.com/dashboard/db/magma2",
         title: "Magma Home (2)"
-     },
-     {
+    },
+    {
         pageType: pageTypes.CAROUSEL,
         src: "http://grafana.issuu.com/dashboard/db/graphdb",
         title: "graphdb"
-     },
-     {
+    },
+        {
+        pageType: pageTypes.CAROUSEL,
+        src: "http://grafana.issuu.com/dashboard/db/documednt-rdb-activity",
+        title: "Token distribution"
+    },
+    {
         pageType: pageTypes.CAROUSEL,
         src: "http://grafana.issuu.com/dashboard/db/thin-layer",
         title: "thin layer"
-     },
-     {
-         pageType: pageTypes.CAROUSEL,
-         src: "http://grafana.issuu.com/dashboard/db/login",
-         title: "issuu login"
-     },
-     {
+    },
+    {
+        pageType: pageTypes.CAROUSEL,
+        src: "http://grafana.issuu.com/dashboard/db/login",
+        title: "issuu login"
+    },
+    {
         pageType: pageTypes.CAROUSEL,
         src: "http://grafana.issuu.com/dashboard/db/clippings",
         title: "clippings"
-     },
-     {
+    },
+    {
         pageType: pageTypes.CAROUSEL,
         src: "http://grafana.issuu.com/dashboard/db/tokens",
         title: "Token distribution"
-     },
+    },
+    {
+        pageType: pageTypes.CAROUSEL,
+        src: "http://grafana.issuu.com/dashboard/db/user-last-activity",
+        title: "Token distribution"
+    },
     {
         pageType: pageTypes.CAROUSEL,
         src: "/templates/mixpanel_auth.html",
@@ -63,6 +73,7 @@ var pages = [
         src: "/templates/mixpanel_selectionss.html",
         title: "InDesign User Actions"
     },
+
     // {
     //     pageType: pageTypes.CAROUSEL,
     //     src: "/templates/release-notes.html",
@@ -175,6 +186,13 @@ function stopCarousel() {
     $('.js-pause-button').addClass('isActive');
 }
 
+function pauseCarousel() {
+    $('.js-progress-bar').css('animation-play-state', 'paused');
+    $('.js-play-button').removeClass('isActive');
+    $('.js-pause-button').addClass('isActive');
+    setTimeout(function(){ startCarousel(); }, 10000);
+}
+
 
 ////////////////////////////////////////////////////////////////////////////////
 // Change page
@@ -194,7 +212,7 @@ function getPreviousCarouselPage() {
 }
 
 function changePage(pageRef) {
-    var $newPage = $('.js-iframe[data-ref="' + pageRef + '"]')
+    var $newPage = $('.js-iframe[data-ref="' + pageRef + '"]');
     var $newMenuLink = $('.js-menu-link[data-iframe-ref="' + pageRef + '"]');
     var $newSearchResultLink = $('.js-search-result-link[data-iframe-ref="' + pageRef + '"]');
     // menu links
@@ -297,9 +315,9 @@ $('body').on('keydown', function(e) {
         changeCarouselPage(getPreviousCarouselPage());
     } else if (e.keyCode === 32) { // space (stop/start carousel)
         if ($('.js-play-button').hasClass('isActive')) {
-            stopCarousel();
-        } else {
-            startCarousel();
+            pauseCarousel();
+        } else{
+            clearTimeout(startCarousel);
         }
     }
 });
@@ -318,7 +336,7 @@ $('body').on('click', '.js-menu-link, .js-search-result-link', function(e) {
 
 // Pause page transitions when interacting with the page
 $('body').on('click', '.js-pause-button, .js-menu-link, .js-search-result-link', function() {
-    stopCarousel();
+    pauseCarousel();
 });
 
 $('.js-play-button').on('click', function() {
